@@ -1,5 +1,4 @@
-import json
-from flask import Flask, request, jsonify, make_response, Response
+from flask import Flask, request, Response
 from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
@@ -16,6 +15,7 @@ class Movie(db.Document):
     meta = {
         'collection': 'netflix',
     }
+    ID=db.StringField()
     title = db.StringField()
     type = db.StringField()
     description = db.StringField()
@@ -40,10 +40,11 @@ def get_movies():
 def add_movie():
     body = request.get_json()
     movie =  Movie(**body).save()
-    return {'id': str(id)}, 200
+    return 'Inserted Successfully', 200
 
 @app.route('/movies/<title>', methods=['PATCH'])
 def update_movie(title):
+    ## check the movie avai
     body = request.get_json()
     movie=Movie.objects.get_or_404(title=title)
     movie.update(**body)
